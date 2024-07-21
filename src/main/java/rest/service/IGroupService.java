@@ -1,12 +1,11 @@
 package rest.service;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import rest.dto.GroupDTO;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface GroupService {
+public interface IGroupService {
 
     /**
      * Добавление новой группы

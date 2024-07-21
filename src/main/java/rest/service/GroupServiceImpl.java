@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class GroupServiceImpl implements GroupService {
+public class GroupServiceImpl implements IGroupService {
 
     @Autowired
     private DbRepository dbRepository;

@@ -6,10 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rest.dto.GroupDTO;
-import rest.exceptions.GroupNotFoundException;
 import rest.request.GroupRequest;
 import rest.response.GroupResponse;
-import rest.service.GroupService;
+import rest.service.IGroupService;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,26 +16,26 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/groups")
 public class GroupController {
-    private final GroupService groupService;
+    private final IGroupService IGroupService;
     private final ModelMapper mapper = new ModelMapper();
 
     @Autowired
-    public GroupController(GroupService groupService) {
-        this.groupService = groupService;
+    public GroupController(IGroupService IGroupService) {
+        this.IGroupService = IGroupService;
     }
 
     @PostMapping
     @ResponseBody
     public ResponseEntity<GroupResponse> add(@RequestBody GroupRequest groupRequest) {
         GroupDTO groupDTO = mapper.map(groupRequest, GroupDTO.class);
-        groupDTO = groupService.add(groupDTO);
+        groupDTO = IGroupService.add(groupDTO);
         return new ResponseEntity<>(mapper.map(groupDTO, GroupResponse.class), HttpStatus.CREATED);
     }
 
     @GetMapping
     @ResponseBody
     public ResponseEntity<List<GroupResponse>> findAll() {
-        List<GroupDTO> groups = groupService.findAll();
+        List<GroupDTO> groups = IGroupService.findAll();
         List<GroupResponse> response = groups.stream()
                 .map(GroupDTO -> mapper.map(GroupDTO, GroupResponse.class))
                 .toList();
@@ -46,7 +45,7 @@ public class GroupController {
     @GetMapping("/group")
     @ResponseBody
     public ResponseEntity<Optional<GroupResponse>> findById(@RequestParam(value = "id") Integer id) {
-        Optional<GroupDTO> dto = groupService.findById(id);
+        Optional<GroupDTO> dto = IGroupService.findById(id);
         GroupResponse group = new ModelMapper().map(dto.get(), GroupResponse.class);
         return new ResponseEntity<>(Optional.of(group), HttpStatus.OK);
     }
@@ -54,7 +53,7 @@ public class GroupController {
     @DeleteMapping("/group")
     @ResponseBody
     public ResponseEntity<?> delete(@RequestParam(value = "id") Integer id){
-        groupService.delete(id);
+        IGroupService.delete(id);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -63,7 +62,7 @@ public class GroupController {
     public ResponseEntity<GroupResponse> update(@RequestParam(value = "id") Integer id,
                                                 @RequestBody GroupRequest groupRequest){
         GroupDTO groupDTO = mapper.map(groupRequest, GroupDTO.class);
-        groupDTO = groupService.update(id, groupDTO);
+        groupDTO = IGroupService.update(id, groupDTO);
         return new ResponseEntity<>(mapper.map(groupDTO, GroupResponse.class), HttpStatus.OK);
     }
 }
